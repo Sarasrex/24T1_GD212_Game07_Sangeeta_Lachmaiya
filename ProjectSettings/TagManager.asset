@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Fluid
   - canPickUp
+  - holdPosOne
+  - holdPosTwo
   layers:
   - Default
   - TransparentFX

@@ -5,31 +5,38 @@ using UnityEngine;
 public class PickUp : MonoBehaviour
 {
     public GameObject holdPosOne;
+    public GameObject holdPosTwo;
     public GameObject pizzaPrefab; // Prefab of the object to pick up
     public float throwForce = 10f;
 
-    private GameObject heldObject; // Object that is picked up and held
+    public GameObject heldObject; // Object that is picked up and held
     private Rigidbody heldObjectRb;
 
     void Start()
     {
         // Deactivate the hold position initially
         //holdPosOne.SetActive(false);
+        holdPosOne = GameObject.FindWithTag("holdPosOne");
+        holdPosTwo = GameObject.FindWithTag("holdPosTwo");
+
     }
 
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.M))
             {
                 // Create a new object to visually represent the held object
                 heldObject = Instantiate(pizzaPrefab, transform.position, Quaternion.identity);
+                heldObject.GetComponent<PickUp>().heldObject = heldObject;
 
                 // Disable physics for the held object
                 heldObjectRb = heldObject.GetComponent<Rigidbody>();
-                if (heldObjectRb != null)
-                    heldObjectRb.isKinematic = true;
+            }
+            if (heldObjectRb != null)
+            {
+                heldObjectRb.isKinematic = true;
 
                 // Set the position of the held object to the hold position
                 heldObject.transform.parent = holdPosOne.transform;
@@ -46,6 +53,7 @@ public class PickUp : MonoBehaviour
     void Update()
     {
         // Check if the player wants to throw the held object
+        Debug.Log(heldObject);
         if (Input.GetKeyDown(KeyCode.Q) && heldObject != null)
         {
             Debug.Log("Throwing held object");
